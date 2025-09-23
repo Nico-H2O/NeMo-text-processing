@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pdb
 import pynini
 from pynini.lib import pynutil
 
@@ -41,6 +42,10 @@ class ElectronicFst(GraphFst):
 
     def __init__(self, deterministic: bool = True):
         super().__init__(name="electronic", kind="verbalize", deterministic=deterministic)
+        
+        # Debugging: Entry point to ElectronicFst initialization
+        pdb.set_trace()
+        
         graph_digit_no_zero = pynini.invert(
             pynini.string_file(get_abs_path("data/numbers/digit.tsv"))
         ).optimize() | pynini.cross("1", "eins")
@@ -49,6 +54,9 @@ class ElectronicFst(GraphFst):
         graph_symbols = pynini.string_file(get_abs_path("data/electronic/symbols.tsv")).optimize()
         server_common = pynini.string_file(get_abs_path("data/electronic/server_name.tsv"))
         domain_common = pynini.string_file(get_abs_path("data/electronic/domain.tsv"))
+        
+        # Debugging: After loading base graphs and data files
+        pdb.set_trace()
 
         def add_space_after_char():
             return pynini.closure(NEMO_NOT_QUOTE - pynini.accep(" ") + insert_space) + (
@@ -65,6 +73,10 @@ class ElectronicFst(GraphFst):
         domain @= verbalize_characters
 
         domain = pynutil.delete('domain: "') + domain + pynutil.delete('"')
+        
+        # Debugging: After creating username and domain processing graphs
+        pdb.set_trace()
+        
         protocol = (
             pynutil.delete('protocol: "')
             + add_space_after_char() @ pynini.cdrewrite(graph_symbols, "", "", NEMO_SIGMA)
@@ -74,9 +86,15 @@ class ElectronicFst(GraphFst):
             user_name + NEMO_SPACE + pynutil.insert("at ") + domain | (pynutil.insert("at ") + user_name)
         )
 
+        # Debugging: After creating the main graph structure
+        pdb.set_trace()
+
         # normalizes sentence-final periods following URLs
         delete_tokens = self.delete_tokens(self.graph + delete_preserve_order)
         preserve_final_period = pynini.cdrewrite(pynini.cross(" punkt", "."), "", "[EOS]", NEMO_SIGMA)
 
         delete_tokens = delete_tokens @ preserve_final_period
         self.fst = delete_tokens.optimize()
+        
+        # Debugging: Final FST created and optimized
+        pdb.set_trace()

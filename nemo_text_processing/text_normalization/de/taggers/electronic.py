@@ -13,6 +13,7 @@
 # limitations under the License.
 
 
+import pdb
 import pynini
 from pynini.lib import pynutil
 
@@ -33,6 +34,9 @@ class ElectronicFst(GraphFst):
 
     def __init__(self, deterministic: bool = True):
         super().__init__(name="electronic", kind="classify", deterministic=deterministic)
+        
+        # Debugging: Entry point to ElectronicFst tagger initialization
+        pdb.set_trace()
 
         dot = pynini.accep(".")
 
@@ -46,6 +50,9 @@ class ElectronicFst(GraphFst):
         all_characters = pynini.closure(
             (NEMO_ALPHA | NEMO_DIGIT | symbols), 1
         )  # alphabet of accepted chars including the '.'
+        
+        # Debugging: After setting up character and symbol alphabets
+        pdb.set_trace()
 
         # domains
         domain = dot + accepted_characters
@@ -59,6 +66,9 @@ class ElectronicFst(GraphFst):
         # email
         username = pynutil.insert('username: "') + all_characters + pynutil.insert('"') + pynini.cross("@", " ")
         email = username + domain_graph
+
+        # Debugging: After creating email and domain graphs
+        pdb.set_trace()
 
         # social media tags
         tag = (
@@ -78,6 +88,9 @@ class ElectronicFst(GraphFst):
 
         graph = url | domain_graph | email | tag
         self.graph = graph
+        
+        # Debugging: After creating final classification graph
+        pdb.set_trace()
 
         final_graph = self.add_tokens(self.graph + pynutil.insert(" preserve_order: true"))
         self.fst = final_graph.optimize()
