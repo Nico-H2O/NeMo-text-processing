@@ -37,3 +37,5 @@ class ElectronicFst(GraphFst):
 
         graph = pynutil.insert("name: \"") + final_graph + pynutil.insert("\"")
         self.fst = graph.optimize()
+
+        
