@@ -40,6 +40,9 @@ from nemo_text_processing.inverse_text_normalization.ger.verbalizers.measure imp
 from nemo_text_processing.inverse_text_normalization.ger.verbalizers.telephone import (
     TelephoneFst,
 )
+from nemo_text_processing.inverse_text_normalization.ger.verbalizers.electronic import (
+    ElectronicFst,
+)
 from nemo_text_processing.inverse_text_normalization.ger.graph_utils import GraphFst
 
 from pynini.lib import pynutil
@@ -60,6 +63,8 @@ class VerbalizeFst(GraphFst):
         ordinal_graph = ordinal.fst
         decimal = DecimalFst()
         decimal_graph = decimal.fst
+        electronic = ElectronicFst()
+        electronic_graph = electronic.fst
         fraction = FractionFst()
         fraction_graph = fraction.fst
         date = DateFst()
@@ -76,6 +81,7 @@ class VerbalizeFst(GraphFst):
             cardinal_graph
             | ordinal_graph
             | decimal_graph
+            | electronic_graph
             | fraction_graph
             | date_graph
             | time_graph
@@ -98,6 +104,9 @@ from nemo_text_processing.inverse_text_normalization.ger.verbalizers.ordinal imp
 from nemo_text_processing.inverse_text_normalization.ger.verbalizers.decimal import (
     DecimalFst,
 )
+from nemo_text_processing.inverse_text_normalization.ger.verbalizers.electronic import (
+    ElectronicFst,
+)
 from nemo_text_processing.inverse_text_normalization.ger.verbalizers.fraction import (
     FractionFst,
 )
@@ -108,6 +117,9 @@ from nemo_text_processing.inverse_text_normalization.ger.verbalizers.money impor
 )
 from nemo_text_processing.inverse_text_normalization.ger.verbalizers.measure import (
     MeasureFst,
+)
+from nemo_text_processing.inverse_text_normalization.ger.verbalizers.telephone import (
+    TelephoneFst,
 )
 from nemo_text_processing.inverse_text_normalization.ger.graph_utils import GraphFst
 from pynini.lib import pynutil
@@ -179,6 +191,16 @@ class VerbalizeFst(GraphFst):
         measure_graph = measure.fst
         logging.debug(f"Measure Graph (string): {fst_to_string(measure_graph)}")
 
+        logging.debug("Initializing TelephoneFst...")
+        telephone = TelephoneFst()
+        telephone_graph = telephone.fst
+        logging.debug(f"Telephone Graph (string): {fst_to_string(telephone_graph)}")
+
+        logging.debug("Initializing ElectronicFst...")
+        electronic = ElectronicFst()
+        electronic_graph = electronic.fst
+        logging.debug(f"Electronic Graph (string): {fst_to_string(electronic_graph)}")
+
         # Compose the final graph
         logging.debug("Composing the final graph...")
         graph = (
@@ -190,6 +212,8 @@ class VerbalizeFst(GraphFst):
             | time_graph
             | money_graph
             | measure_graph
+            | telephone_graph
+            | electronic_graph
         )
         logging.debug(f"Final Verbalize Graph (string): {fst_to_string(graph)}")
 

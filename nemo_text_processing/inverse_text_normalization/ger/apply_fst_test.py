@@ -4,7 +4,7 @@ import pynini
 
 # from taggers.cardinal import CardinalFst
 from verbalizers.cardinal import CardinalFst
-
+from nemo_text_processing.inverse_text_normalization.ger.graph_utils import DecimalFst
 
 def apply_fst(text, fst):
     """Given a string input, returns the output string

@@ -16,12 +16,12 @@ import os
 from argparse import ArgumentParser
 from time import perf_counter
 from typing import List
+from pynini.lib import pynutil, rewrite
 
 from nemo_text_processing.text_normalization.data_loader_utils import load_file, write_file
 from nemo_text_processing.text_normalization.en.graph_utils import INPUT_CASED, INPUT_LOWER_CASED
 from nemo_text_processing.text_normalization.normalize import Normalizer
 from nemo_text_processing.text_normalization.token_parser import TokenParser
-
 
 class InverseNormalizer(Normalizer):
     """
@@ -48,7 +48,7 @@ class InverseNormalizer(Normalizer):
         cache_dir: str = None,
         overwrite_cache: bool = False,
         max_number_of_permutations_per_split: int = 729,
-    ):
+        ):
 
         assert input_case in ["lower_cased", "cased"]
 
@@ -81,6 +81,13 @@ class InverseNormalizer(Normalizer):
             from nemo_text_processing.inverse_text_normalization.de.verbalizers.verbalize_final import (
                 VerbalizeFinalFst,
             )
+        
+        elif lang == 'ger':  # German (Deutsch)
+            from nemo_text_processing.inverse_text_normalization.ger.taggers.tokenize_and_classify import ClassifyFst
+            from nemo_text_processing.inverse_text_normalization.ger.verbalizers.verbalize_final import (
+                VerbalizeFinalFst,
+            )
+
         elif lang == 'fr':  # French (Français)
             from nemo_text_processing.inverse_text_normalization.fr.taggers.tokenize_and_classify import ClassifyFst
             from nemo_text_processing.inverse_text_normalization.fr.verbalizers.verbalize_final import (
@@ -101,7 +108,7 @@ class InverseNormalizer(Normalizer):
             from nemo_text_processing.inverse_text_normalization.ar.verbalizers.verbalize_final import (
                 VerbalizeFinalFst,
             )
-        elif lang == 'es_en':  # Arabic
+        elif lang == 'es_en':  # Spanish-English
             from nemo_text_processing.inverse_text_normalization.es_en.taggers.tokenize_and_classify import ClassifyFst
             from nemo_text_processing.inverse_text_normalization.es_en.verbalizers.verbalize_final import (
                 VerbalizeFinalFst,
@@ -139,7 +146,7 @@ class InverseNormalizer(Normalizer):
         self.parser = TokenParser()
         self.lang = lang
         self.max_number_of_permutations_per_split = max_number_of_permutations_per_split
-
+        # self.fst = (self.tagger.fst @ self.verbalizer.fst).optimize()
     def inverse_normalize_list(self, texts: List[str], verbose=False) -> List[str]:
         """
         NeMo inverse text normalizer
@@ -149,7 +156,7 @@ class InverseNormalizer(Normalizer):
             verbose: whether to print intermediate meta information
 
         Returns converted list of input strings
-        """
+#         """
         return self.normalize_list(texts=texts, verbose=verbose)
 
     def inverse_normalize(self, text: str, verbose: bool) -> str:
@@ -163,7 +170,19 @@ class InverseNormalizer(Normalizer):
 
         Returns: written form
         """
-        return self.normalize(text=text, verbose=verbose)
+        # return self.normalize(text=text, verbose=verbose)
+
+        if verbose:
+            print("Input:", text)
+        # Tagger stage
+        tagger_output = rewrite.top_rewrite(text, self.tagger.fst)
+        if verbose:
+                print("Tagger output:", tagger_output)
+        # Verbalizer stage
+        verbalizer_output = rewrite.top_rewrite(tagger_output, self.verbalizer.fst)
+        if verbose:
+            print("Verbalizer output:", verbalizer_output)
+        return verbalizer_output
 
 
 def parse_args():
@@ -175,7 +194,7 @@ def parse_args():
     parser.add_argument(
         "--language",
         help="language",
-        choices=['en', 'de', 'es', 'pt', 'ru', 'fr', 'sv', 'vi', 'ar', 'es_en', 'zh', 'hi', 'hy', 'mr', 'ja'],
+        choices=['en', 'de', 'ger', 'es', 'pt', 'ru', 'fr', 'sv', 'vi', 'ar', 'es_en', 'zh', 'hi', 'hy', 'mr', 'ja'],
         default="en",
         type=str,
     )
@@ -189,7 +208,7 @@ def parse_args():
     )
     parser.add_argument(
         "--whitelist",
-        help="Path to a file with with whitelist replacements," "e.g., inverse_normalization/en/data/whitelist.tsv",
+        help="Path to a file with whitelist replacements, e.g., inverse_normalization/en/data/whitelist.tsv",
         default=None,
         type=str,
     )
@@ -231,3 +250,85 @@ if __name__ == "__main__":
             print(f"- Denormalized. Writing out to {args.output_file}")
         else:
             print(prediction)
+
+# CASE 1
+# example = "eins minus zwei minus drei punkt t v"
+# # example = "one dash two dash three dot t v" - one-two-3.tv"
+# # example = "un guión dos guión tres punto t v" -> un-2-3.tv
+# # example = "dos guión tres punto t v"
+# inverse_normalizer = InverseNormalizer(input_case=INPUT_LOWER_CASED, lang="ger")
+# print(inverse_normalizer.inverse_normalize(example, verbose=True))
+
+# Tagger test
+# tagger_fst = inverse_normalizer.tagger.fst
+# output = rewrite.top_rewrite(example, tagger_fst)
+# print(output)
+
+# electronic { url: "1-2-3.tv" }
+# 1-2-3.tv
+# 1-2-3.tv
+# tokens { electronic { url: "1-2-3.tv" } }
+#  NeMo-text-processing :: INFO     :: Creating ClassifyFst grammars.
+# Time to generate graph: 23.5 sec
+
+# Verbalizer test
+# tagger_fst = inverse_normalizer.tagger.fst
+# tokens = rewrite.top_rewrite(example, tagger_fst)
+# print("Tagger output:", tokens)
+# verbalizer_fst = inverse_normalizer.verbalizer.fst
+# written_form = rewrite.top_rewrite(tokens, verbalizer_fst)
+# print("Verbalizer output:", written_form)
+
+# # Inverse normalization function
+# def inverse_normalize(self, text: str, verbose: bool) -> str:
+#     # Tagger output
+#     tagger_output = rewrite.top_rewrite(text, self.tagger.fst)
+#     if verbose:
+#         print("Tagger output:", tagger_output)
+#     # Verbalizer output
+#     verbalizer_output = rewrite.top_rewrite(tagger_output, self.verbalizer.fst)
+#     if verbose:
+#         print("Verbalizer output:", verbalizer_output)
+#     return verbalizer_output
+
+
+# electronic { url: "1-2-3.tv" }
+# 1-2-3.tv
+# 1-2-3.tv
+# Tagger output: tokens { electronic { url: "1-2-3.tv" } }
+# Verbalizer output: 1-2-3.tv
+#  NeMo-text-processing :: INFO     :: Creating ClassifyFst grammars.
+# Time to generate graph: 22.56 sec
+# Tagger output: tokens { electronic { url: "1-2-3.tv" } }
+# Verbalizer output: 1-2-3.tv
+
+
+# outputs:
+# electronic { url: "1-2-3.tv" }
+# 1-2-3.tv
+# 1-2-3.tv
+#  NeMo-text-processing :: DEBUG    :: tokens { electronic { url: "1minuszweiminusdrei.tv" } }
+# 1minuszweiminusdrei.tv
+#  NeMo-text-processing :: INFO     :: Creating ClassifyFst grammars.
+# Time to generate graph: 24.83 sec
+#  NeMo-text-processing :: DEBUG    :: tokens { electronic { url: "1minuszweiminusdrei.tv" } }
+# 1minuszweiminusdrei.tv
+
+# CASE 2
+# example = "eins minus zwei minus drei punkt t v at gmail punkt com"
+# inverse_normalizer = InverseNormalizer(input_case=INPUT_LOWER_CASED, lang="ger")
+# print(inverse_normalizer.inverse_normalize(example, verbose=True))
+# electronic { url: "1-2-3.tv" }
+# 1-2-3.tv
+# 1-2-3.tv
+#  NeMo-text-processing :: DEBUG    :: tokens { electronic { username: "1minuszweiminusdreipunkttv" domain: "gmail.com" } }
+# 1minuszweiminusdreipunkttv@gmail.com
+#  NeMo-text-processing :: INFO     :: Creating ClassifyFst grammars.
+# Time to generate graph: 23.3 sec
+#  NeMo-text-processing :: DEBUG    :: tokens { electronic { username: "1minuszweiminusdreipunkttv" domain: "gmail.com" } }
+# 1minuszweiminusdreipunkttv@gmail.com
+
+# CASE 3
+# example = "eins minus zwei at gmail punkt com"
+# inverse_normalizer = InverseNormalizer(input_case=INPUT_LOWER_CASED, lang="ger")
+# print(inverse_normalizer.inverse_normalize(example, verbose=True))
