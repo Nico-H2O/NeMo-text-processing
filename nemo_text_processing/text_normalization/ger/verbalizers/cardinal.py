@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from unicodedata import name
 import pynini
 from pynini.lib import pynutil
 
@@ -62,7 +63,9 @@ def apply_fst(text, fst):
 
 
 cardinal = CardinalFst().fst
-example = 'cardinal { negative: "true" integer: "ein Hundert eins" }'
+# example = 'cardinal { negative: "true" integer: "ein hundert eins" }'
+example = 'cardinal { negative: "true" integer: "zwanzig" }'
+# example = 'cardinal { integer: "20" }'
 
 apply_fst(example, cardinal)
-print(cardinal.num_states())
+

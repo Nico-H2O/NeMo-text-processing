@@ -1,0 +1,74 @@
+null~0
+eins~1
+zwei~2
+drei~3
+vier~4
+sechs~6
+zehn~10
+elf~11
+zwölf~12
+dreizehn~13
+vierzehn~14
+fünfzehn~15
+sechzehn~16
+siebzehn~17
+achtzehn~18
+zwanzig~20
+dreißig~30
+vierzig~40
+fünfzig~50
+sechzig~60
+siebzig~70
+achtzig~80
+neunzig~90
+drei und zwanzig~23
+ein hundert~100
+ein hundert eins~101
+ein hundert zwanzig~120
+ein hundert drei und zwanzig~123
+ein hundert eins~101
+ein tausend~1000
+ein hundert tausend~100000
+eine million~1000000
+zehn millionen~10000000
+ein hundert millionen~100000000
+neun billionen sieben hundert neun und achtzig milliarden drei hundert zwei und achtzig millionen fünf hundert sechs und dreißig tausend ein hundert dreißig~9789382536130
+ein hundert sieben und vierzig tausend vier hundert ein und fünfzig~147451
+eine million ein hundert sechs und fünfzig tausend ein hundert drei und siebzig~1156173
+eine milliarde fünf hundert drei und neunzig millionen zwei und siebzig tausend neun hundert ein und sechzig~1593072961
+sieben und neunzig billiarden acht hundert acht billionen zwei hundert vier und sechzig milliarden sieben hundert zwei und siebzig millionen sieben hundert zwei und neunzig tausend fünf~97808264772792005
+zehn billiarden zehn billionen zehn millionen ein hundert tausend zehn~10010000010100010
+minus fünf und zwanzig tausend sieben und dreißig~-25037
+minus fünf und zwanzig tausend sieben und dreißig~-25037
+eine billiarde zwei hundert vier und sechzig billionen drei hundert eins milliarden~1264301000000000
+minus sechzig~-60
+sechs und vierzig tausend sechs hundert vier und sechzig~46664
+zwei millionen drei~2000003
+ein tausend sechs und zwanzig~1026
+ein tausend ein hundert sechs und zwanzig~1126
+achtzehn millionen vier hundert fünfzig tausend neun hundert neunzig~18450990
+achtzehn millionen neun hundert vierzig tausend sieben hundert zwei und zwanzig~18940722
+achtzehn millionen sechs hundert neunzig tausend neun hundert sechzehn~18690916
+achtzehn tausend acht hundert achtzig~18880
+zwei millionen drei~2.000.003
+ein tausend dreizehn~1.013
+ein tausend eins~1.001
+ein tausend ein hundert~1.100
+ein tausend sechs und zwanzig~1.026
+ein tausend ein hundert sechs und zwanzig~1.126
+achtzehn millionen vier hundert fünfzig tausend neun hundert neunzig~18.450.990
+achtzehn millionen neun hundert vierzig tausend sieben hundert zwei und zwanzig~18.940.722
+achtzehn millionen sechs hundert neunzig tausend neun hundert sechzehn~18.690.916
+achtzehn tausend acht hundert achtzig~18.880
+ein tausend ein hundert sechs und zwanzig~1.126
+neun billionen sieben hundert neun und achtzig milliarden drei hundert zwei und achtzig millionen fünf hundert sechs und dreißig tausend ein hundert dreißig~9.789.382.536.130
+zwei hundert vier und fünfzig~254
+ein hundert sieben und vierzig tausend vier hundert ein und fünfzig~147.451
+eine million ein hundert sechs und fünfzig tausend ein hundert drei und siebzig~1.156.173
+eine milliarde fünf hundert drei und neunzig millionen zwei und siebzig tausend neun hundert ein und sechzig~1.593.072.961
+sieben und neunzig billiarden acht hundert acht billionen zwei hundert vier und sechzig milliarden sieben hundert zwei und siebzig millionen sieben hundert zwei und neunzig tausend fünf~97.808.264.772.792.005
+zehn billiarden zehn billionen zehn millionen ein hundert tausend zehn~10.010.000.010.100.010
+minus fünf und zwanzig tausend sieben und dreißig~-25.037
+eine billiarde zwei hundert vier und sechzig billionen drei hundert eins milliarden neun hundert acht und dreißig millionen ein hundert vier~1.264.301.938.000.104
+ein tausend zwanzig~1.020
+ein tausend~1.000

@@ -141,6 +141,9 @@ class Normalizer:
         elif lang == 'de':
             from nemo_text_processing.text_normalization.de.taggers.tokenize_and_classify import ClassifyFst
             from nemo_text_processing.text_normalization.de.verbalizers.verbalize_final import VerbalizeFinalFst
+        elif lang == 'ger':
+            from nemo_text_processing.text_normalization.ger.taggers.tokenize_and_classify import ClassifyFst
+            from nemo_text_processing.text_normalization.ger.verbalizers.verbalize_final import VerbalizeFinalFst
         elif lang == 'es':
             from nemo_text_processing.text_normalization.es.taggers.tokenize_and_classify import ClassifyFst
             from nemo_text_processing.text_normalization.es.verbalizers.verbalize_final import VerbalizeFinalFst
@@ -720,7 +723,7 @@ def parse_args():
     parser.add_argument(
         "--language",
         help="language",
-        choices=["en", "de", "es", "fr", "hu", "sv", "zh", "ar", "it", "hy", "ja", "hi"],
+        choices=["en", "de", "es", "fr", "ger", "hu", "sv", "zh", "ar", "it", "hy", "ja", "hi"],
         default="en",
         type=str,
     )
@@ -832,3 +835,4 @@ if __name__ == "__main__":
                 logger.info(normalizer_prediction)
 
     logger.info(f"Execution time: {perf_counter() - start_time:.02f} sec")
+
