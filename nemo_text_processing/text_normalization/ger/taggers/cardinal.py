@@ -102,14 +102,6 @@ class CardinalFst(GraphFst):
                 | pynutil.delete("00")
             ) | pynutil.delete("0") + tens_no_zero()
 
-        # to accept ein hundert and einhundert
-    #         return (graph_digit_no_one + insert_space | pynini.cross("1", "ein ")) + (
-    #     pynutil.insert("hundert") | pynini.cross("hundert", "hundert")
-    # ) + (
-    #     pynini.closure(insert_space + pynutil.insert(AND, weight=0.0001), 0, 1) + insert_space + tens_no_zero()
-    #     | pynutil.delete("00")
-    # ) | pynutil.delete("0") + tens_no_zero()
-
         def thousand():
             return (hundred_non_zero() + insert_space + pynutil.insert("tausend") | pynutil.delete("000")) + (
                 insert_space + hundred_non_zero() | pynutil.delete("000")
@@ -182,7 +174,6 @@ class CardinalFst(GraphFst):
         )
         self.graph |= graph_zero | pynini.cross("1", "eins")
 
-        # doesn't normalize IP4 addresses, e.g. 192.168.1.1; removes leading zeros 011.022.033.004 
         self.graph = (
             pynini.closure(NEMO_DIGIT, 1, 3)
             + (pynini.closure(pynutil.delete(".") + NEMO_DIGIT**3) | pynini.closure(NEMO_DIGIT**3))
@@ -210,12 +201,3 @@ class CardinalFst(GraphFst):
         final_graph = optional_minus_graph + pynutil.insert("integer: \"") + self.graph + pynutil.insert("\"")
         final_graph = self.add_tokens(final_graph)
         self.fst = final_graph.optimize()
-
-# # # TESTS
-# if __name__ == "__main__":
-#     from pynini.lib import rewrite
-#     # example = "1.234"
-#     # example = "24.156.99.202"
-#     example = "011.022.033.004"
-#     fst = CardinalFst().fst
-#     print(rewrite.top_rewrite(example, fst))
