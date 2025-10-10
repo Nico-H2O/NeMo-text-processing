@@ -17,7 +17,7 @@ from collections import defaultdict
 import pynini
 from pynini.lib import pynutil, rewrite
 from pynini import closure, union, cross, cdrewrite
-from nemo_text_processing.text_normalization.de.utils import get_abs_path, load_labels
+from nemo_text_processing.text_normalization.ger.utils import get_abs_path, load_labels
 from nemo_text_processing.text_normalization.en.graph_utils import (
     NEMO_DIGIT,
     NEMO_SIGMA,
@@ -82,7 +82,6 @@ class CardinalFst(GraphFst):
         graph_digit = graph_digit_no_one | graph_one
         self.digit = (graph_digit | graph_zero).optimize()
         graph_teen = pynini.string_file(get_abs_path("data/numbers/teen.tsv")).invert()
-
         graph_ties = pynini.string_file(get_abs_path("data/numbers/ties.tsv")).invert()
 
 
@@ -154,14 +153,8 @@ class CardinalFst(GraphFst):
             + thousand()
         )
 
-        fix_syntax = [
-            ("eins tausend", "ein tausend"),
-            ("eins millionen", "eine million"),
-            ("eins milliarden", "eine milliarde"),
-            ("eins billionen", "eine billion"),
-            ("eins billiarden", "eine billiarde"),
-        ]
-        fix_syntax = pynini.union(*[pynini.cross(*x) for x in fix_syntax])
+        fix_syntax = pynini.string_file(get_abs_path("data/numbers/cardinal_one_corrections.tsv"))
+
         self.graph = (
             ((NEMO_DIGIT - "0" + pynini.closure(NEMO_DIGIT, 0)) - "0" - "1")
             @ pynini.cdrewrite(pynini.closure(pynutil.insert("0")), "[BOS]", "", NEMO_SIGMA)
